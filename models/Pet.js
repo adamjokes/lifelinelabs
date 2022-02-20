@@ -5,10 +5,6 @@ const Pet = new mongoose.Schema({
     name:{
         type: String, 
         required: true
-    },
-    owner:{
-        type: mongoose.Schema.Types.ObjectId.name,
-        ref:'Person'
     }
 }, {collection: 'pet'});
 

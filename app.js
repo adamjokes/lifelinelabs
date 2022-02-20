@@ -12,8 +12,8 @@ const personRoute = require('./routes/PersonRoute');
 const petRoute = require('./routes/PetRoute')
 
 //Middleware usage for routes
-app.use('/addPeople', personRoute)
-app.use('/addPet', petRoute)
+app.use('/person', personRoute)
+app.use('/pet', petRoute)
 
 //Connect to db
 mongoose.connect(process.env.DB_CONNECTION,
