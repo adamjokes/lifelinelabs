@@ -17,10 +17,9 @@ app.use('/pet', petRoute)
 
 //Connect to db
 mongoose.connect(process.env.DB_CONNECTION,
-{useNewUrlParser:true},
-()=>console.log('connected to db!'))
+{useNewUrlParser:true})
+
+module.exports = app
 
 //Middleware to listen to port 3000
 app.listen(3000, () => console.log('Server Started...'));
-
-//SSVbwrTltZxXhFHi
