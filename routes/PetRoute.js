@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Pet = require('../models/Pet');
 const Person = require('../models/Person');
+const { findById } = require('../models/Person');
 
-// search on pet id OR pet's person id
-// isPerson will be a flag to determine endpoint search
+//GET to fetch pet data using ID or person data using pet ID
+//isPerson will be a flag to determine endpoint search
 router.get('/:id/isPerson/:isPerson',async (req, res)=>{
     try{
         if (req.params.isPerson == 0) {
@@ -22,7 +23,7 @@ router.get('/:id/isPerson/:isPerson',async (req, res)=>{
             // console.log("promiseList", promiseList)
 
             Promise.all(promiseList).then((petList)=> {
-                res.json(petList)
+            res.json(petList)
             });
         }
     }catch(err){
@@ -30,8 +31,8 @@ router.get('/:id/isPerson/:isPerson',async (req, res)=>{
     }
 })
 
-// create a single pet
-router.post('/', async (req, res)=>{
+//POST pet data
+router.post('/addPet', async (req, res)=>{
     const pet = new Pet({
         name: req.body.name,
         owner: req.body.owner
@@ -47,15 +48,16 @@ router.post('/', async (req, res)=>{
    
 });
 
-// /pet/edit/:id
-// edit pet properties
+
+//PATCH pet name
 router.patch('/:id', async(req, res) => {
     try{
-        const updatePet = await Pet.updateOne(
+        await Pet.updateOne(
             { _id:req.params.id }, 
             { $set: { name: req.body.name } }
         )
-        res.json(updatePet)
+        const updatedPet = await Pet.findById(req.params.id);
+        res.json(updatedPet)
     }catch (err){
         res.json(err)
     }
@@ -64,7 +66,7 @@ router.patch('/:id', async(req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try{
-        const removePet = await Pet.remove({ _id: req.params.id })
+        const removePet = await Pet.deleteOne({ _id: req.params.id })
         res.json(removePet)
     }catch (err){
         res.json({message: err})

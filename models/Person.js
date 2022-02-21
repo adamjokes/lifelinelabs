@@ -1,13 +1,15 @@
 const { default: mongoose } = require('mongoose');
-const Joi = require('joi')
+const Joi = require('joi');
 
 //Define person schema
 const Person = new mongoose.Schema({
     name:{
-        type: String
+        type: String,
+        required: true
     },
     lastname:{
-        type: String
+        type: String,
+        required: true
     },
     friend:[{
         type: mongoose.Schema.Types.ObjectId, 

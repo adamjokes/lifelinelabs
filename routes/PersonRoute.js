@@ -2,21 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Person = require('../models/Person');
 
-// search on pet id OR pet's person id
-// isPerson will be a flag to determine endpoint search
-
-//GET route to fetch one person
-router.get('/:id', async (req, res) => {
-    const searchPerson= await Person.findById(req.params.id)
-    res.json(searchPerson)
-})
-
-//GET route to find a friend
+//GET to fetch person data using ID or person data using friend ID
+//isFriend will be a flag to determine endpoint search
 router.get('/:id/isFriend/:isFriend',async (req, res)=>{
     try{
         if (req.params.isFriend == 0) {
             // search based on person id
+            
             const searchPerson = await Person.findById(req.params.id).exec();
+            var err = await 
             res.json(searchPerson)
         } else {
             // search based on friend id
@@ -29,7 +23,7 @@ router.get('/:id/isFriend/:isFriend',async (req, res)=>{
 })
 
 
-//POST route to add a person
+//POST to add a person
 router.post('/addPerson', async (req, res)=>{
     // const err = Person.joiValidate(req.body)
     // if (err) throw err;
@@ -41,7 +35,7 @@ router.post('/addPerson', async (req, res)=>{
 
     try{
         const savedPerson = await person.save()
-        res.json(savedPerson)
+        res.send(savedPerson)
     }catch(err){
         res.json({message: err})
     }
@@ -49,10 +43,10 @@ router.post('/addPerson', async (req, res)=>{
 
 
 
-//PATCH route to edit person properties
+//PATCH to edit person properties
 router.patch('/:id', async(req, res) => {
     try{
-        const updatePerson = await Person.updateOne(
+        await Person.updateOne(
             { _id:req.params.id }, 
             { 
                 $set: 
@@ -62,16 +56,16 @@ router.patch('/:id', async(req, res) => {
                 } 
             }
         )
-        res.json(updatePerson)
+        res.json(req.body)
     }catch (err){
         res.json(err)
     }
 })
 
-//PATCH route to assign friend
+//PATCH to assign friend
 router.patch('/assignFriend/:id', async(req, res) => {
     try{
-        const assignFriend = await Person.updateOne(
+        await Person.updateOne(
             { _id:req.params.id }, 
             { 
                 $push: 
@@ -80,16 +74,17 @@ router.patch('/assignFriend/:id', async(req, res) => {
                 } 
             }
         )
-        res.json(assignFriend)
+        const searchUpdatedPerson = await Person.findById(req.params.id);
+        res.json(searchUpdatedPerson)
     }catch (err){
         res.json(err)
     }
 })
 
-//PATCH route to unassign friend
+//PATCH to unassign friend
 router.patch('/unassignFriend/:id', async(req, res) => {
     try{
-        const unassignFriend = await Person.updateOne(
+        await Person.updateOne(
             { _id:req.params.id }, 
             { 
                 $pull: 
@@ -98,35 +93,37 @@ router.patch('/unassignFriend/:id', async(req, res) => {
                 } 
             }
         )
-        res.json(unassignFriend)
+        const searchUpdatedPerson = await Person.findById(req.params.id);
+        res.json(searchUpdatedPerson)
     }catch (err){
         res.json(err)
     }
 })
 
 
-//PATCH route to assign pet
+//PATCH to assign pet
 router.patch('/assignPet/:id', async(req, res) => {
     try{
-        const assignPet = await Person.updateOne(
+        await Person.updateOne(
             { _id:req.params.id }, 
             { 
                 $set: 
                 { 
-                    friend: req.body.person
+                    pet: req.body.pet
                 } 
             }
         )
-        res.json(assignPet)
+        const searchUpdatedPerson = await Person.findById(req.params.id);
+        res.json(searchUpdatedPerson)
     }catch (err){
         res.json(err)
     }
 })
 
-//PATCH route to unassign pet
+//PATCH to unassign pet
 router.patch('/unassignPet/:id', async(req, res) => {
     try{
-        const unassignPet = await Person.updateOne(
+        await Person.updateOne(
             { _id:req.params.id }, 
             { 
                 $pull: 
@@ -135,16 +132,17 @@ router.patch('/unassignPet/:id', async(req, res) => {
                 } 
             }
         )
-        res.json(unassignPet)
+        const searchUpdatedPerson = await Person.findById(req.params.id);
+        res.json(searchUpdatedPerson)
     }catch (err){
         res.json(err)
     }
 })
 
-//DELETE route a person
+//DELETE a person
 router.delete('/:id', async (req, res) => {
     try{
-        const removePerson = await Person.remove({ _id: req.params.id })
+        const removePerson = await Person.deleteOne({ _id: req.params.id })
         res.json(removePerson)
     }catch (err){
         res.json({message: err})
