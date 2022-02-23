@@ -17,13 +17,11 @@ router.get('/:id/isPerson/:isPerson',async (req, res)=>{
             const searchPerson = await Person.findById(req.params.id).exec();
 
             let promiseList = await searchPerson.pet.map(async (item,i)=> 
-                Pet.findById(item).exec() 
+               Pet.findById(item).exec() 
             );
 
-            // console.log("promiseList", promiseList)
-
             Promise.all(promiseList).then((petList)=> {
-            res.json(petList)
+                res.json(petList)
             });
         }
     }catch(err){

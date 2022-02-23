@@ -12,7 +12,7 @@ npm i
 
 ## Additional Information
 
-This project utilizes Express.js and MongoDB. The app is run locally and has already been set to listen to port 3000 (you can change this to your liking). As for the database, you can choose to install MongoDB locally [MongoDB](https://www.mongodb.com/try/download/community) or use mLab to create cloud Mongo database [mLab](https://mlab.com/). To connect to the database, simply insert your database connection information in this line of code at the [app.js] file.
+This project utilizes Express.js and MongoDB. The app is run locally and has already been set to listen to port 3000 (you can change this to your liking). As for the database, you can choose to install MongoDB locally [MongoDB](https://www.mongodb.com/try/download/community) or use mLab to create cloud Mongo database [mLab](https://mlab.com/). To connect to the database, simply insert your database connection information in this line of code at the app.js file.
 
 ```js
 mongoose.connect({insert_connection_info_here},

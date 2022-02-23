@@ -9,13 +9,13 @@ router.get('/:id/isFriend/:isFriend',async (req, res)=>{
         if (req.params.isFriend == 0) {
             // search based on person id
             
-            const searchPerson = await Person.findById(req.params.id).exec();
-            var err = await 
+            const searchPerson = await Person(req.params.id).exec();
+
             res.json(searchPerson)
         } else {
             // search based on friend id
-            const searchThroughFriend = await Person.findOne({ friend: req.params.id }).exec();
-            res.json(searchThroughFriend)
+            const searchPerson = await Person.find({ friend: req.params.id })
+            res.json(searchPerson)
         }
     }catch(err){
         res.json({message: err})
@@ -74,8 +74,28 @@ router.patch('/assignFriend/:id', async(req, res) => {
                 } 
             }
         )
-        const searchUpdatedPerson = await Person.findById(req.params.id);
-        res.json(searchUpdatedPerson)
+
+        await Person.updateOne(
+            { _id:req.body.friend }, 
+            { 
+                $push: 
+                { 
+                    friend: req.params.id 
+                } 
+            }
+        )
+
+        const searchUpdatedData = await Person.find(
+            {_id: 
+                { $in: 
+                    [
+                    req.body.friend,
+                    req.params.id
+                    ]
+                }
+            })
+
+        res.json(searchUpdatedData)
     }catch (err){
         res.json(err)
     }
@@ -93,8 +113,26 @@ router.patch('/unassignFriend/:id', async(req, res) => {
                 } 
             }
         )
-        const searchUpdatedPerson = await Person.findById(req.params.id);
-        res.json(searchUpdatedPerson)
+
+        await Person.updateOne(
+            { _id:req.body.friend }, 
+            { 
+                $pull: 
+                { 
+                    friend: req.params.id
+                } 
+            }
+        )
+        const searchUpdatedData = await Person.find(
+            {_id: 
+                { $in: 
+                    [
+                    req.body.friend,
+                    req.params.id
+                    ]
+                }
+            })
+        res.json(searchUpdatedData)
     }catch (err){
         res.json(err)
     }
